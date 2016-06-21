@@ -1,12 +1,17 @@
+
+//check for JavaScript
 if('querySelector' in document && 'addEventListener' in window) {
   var jsCheck = document.getElementById('map-no-show');
   jsCheck.id="map";
 }
 
+//Resize event to scale everything if window resizes
 d3.select(window).on("resize", throttle);
 
 var scaleAdjust;
 var windowWidth = window.innerWidth;
+
+//The map is very different depending on smaller or larger screens
 
 if (windowWidth < 752) {
   scaleAdjust = 1.6;
@@ -31,7 +36,12 @@ var activeCountries, yearCountries, topo, borders, coastline, projection, path, 
 var active = d3.select(null);
 var tooltipPie = d3.select("#donut-chart").append("div").attr("class", "tooltip hidden");
 
-setup(width,height);
+new pym.Child();
+pym.Child({
+  renderCallback: setup
+});
+
+setup(height,width);
 
 function setup(width,height){
   zoom = d3.behavior.zoom()
@@ -54,7 +64,6 @@ function setup(width,height){
   g = svg.append("g");
 }
 
-
 function reset() {
   active.classed("active", false);
   active = d3.select(null);
@@ -71,7 +80,7 @@ function ready(error, world, active) {
   var countries = topojson.feature(world, world.objects.countries).features;
   topo = countries;
   activeCountries = active;
-  coastline = topojson.mesh(world, world.objects.countries, function(a, b) {return a === b});
+  coastline = topojson.mesh(world, world.objects.countries, function(a, b) {return a === b};);
   draw(topo, activeCountries, coastline);
 }
 
@@ -407,3 +416,6 @@ function throttle() {
       redraw();
     }, 200);
 }
+
+
+
