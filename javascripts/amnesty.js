@@ -78,6 +78,7 @@ function ready(error, world, active) {
   activeCountries = active;
   coastline = topojson.mesh(world, world.objects.countries, function(a, b) {return a === b});
   draw(topo, activeCountries, coastline);
+  pymChild.sendHeight();
 }
 
 function draw(topo, activeCountries, coastline) {
@@ -404,8 +405,6 @@ function redraw() {
   radius = Math.min(donutWidth, donutHeight) / 2;
   d3.select("#donut-chart > svg").remove();
   setupDonut(donutWidth,donutHeight);
-
-  pymChild.sendHeight();
 }
 
 var throttleTimer;
@@ -413,6 +412,7 @@ function throttle() {
   window.clearTimeout(throttleTimer);
     throttleTimer = window.setTimeout(function() {
       redraw();
+      pymChild.sendHeight();
     }, 200);
 }
 
