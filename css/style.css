@@ -366,10 +366,14 @@ small,.milli {
   top: 30px;
 }
 
-.cf {
-  content:"";
-  display:table;
-  clear:both;
+.clearfix:before,
+.clearfix:after {
+    content: " "; /* 1 */
+    display: table; /* 2 */
+}
+
+.clearfix:after {
+    clear: both;
 }
 
 .media{
