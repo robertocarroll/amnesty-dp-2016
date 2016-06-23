@@ -35,15 +35,11 @@ var tooltip = d3.select("#map").append("div").attr("class", "tooltip hidden");
 var activeCountries, yearCountries, topo, borders, coastline, projection, path, svg, g, zoom;
 var active = d3.select(null);
 var tooltipPie = d3.select("#donut-chart").append("div").attr("class", "tooltip hidden");
-
-new pym.Child();
-pym.Child({
-  renderCallback: setup
-});
+var pymChild = new pym.Child();
 
 setup(height,width);
 
-function setup(width,height){
+function setup(){
   zoom = d3.behavior.zoom()
             .scaleExtent([1, 6])
             .on("zoom", move);
@@ -80,7 +76,7 @@ function ready(error, world, active) {
   var countries = topojson.feature(world, world.objects.countries).features;
   topo = countries;
   activeCountries = active;
-  coastline = topojson.mesh(world, world.objects.countries, function(a, b) {return a === b};);
+  coastline = topojson.mesh(world, world.objects.countries, function(a, b) {return a === b});
   draw(topo, activeCountries, coastline);
 }
 
@@ -168,6 +164,7 @@ function draw(topo, activeCountries, coastline) {
     });
   });
 
+  pymChild.sendHeight();
 }
 
 function move() {
@@ -407,6 +404,8 @@ function redraw() {
   radius = Math.min(donutWidth, donutHeight) / 2;
   d3.select("#donut-chart > svg").remove();
   setupDonut(donutWidth,donutHeight);
+
+  pymChild.sendHeight();
 }
 
 var throttleTimer;
