@@ -22,7 +22,7 @@ var minYear = '2007';
 var currentYear = startYear;
 var tooltip = d3.select("#map").append("div").attr("class", "tooltip hidden");
 var tooltipOffset;
-var activeCountries, yearCountries, topo, borders, coastline, projection, path, svg, g, zoom;
+var activeCountries, yearCountries, topo, borders, coastline, projection, path, svg, g, zoom, savedZoomScale;
 var active = d3.select(null);
 var tooltipBar = d3.select("#bar-chart").append("div").attr("class", "tooltip hidden");
 
@@ -70,6 +70,8 @@ function setup(width,height){
   zoom = d3.behavior.zoom()
             .scaleExtent([1, 6])
             .on("zoom", move);
+
+  savedZoomScale = 0+zoom.scale();
 
   projection = d3.geo.naturalEarth()
     .scale(mapScale)
@@ -465,8 +467,9 @@ function activateCountry(d){
 
 function move() {
   var t = d3.event.translate;
-  var s = d3.event.scale;
-  zscale = s;
+  console.log('\n\n==========\n' + zoom.scale() + '\n==========\n\n');
+  var s = savedZoomScale;// Maintain existing scale for map, rather than changing it based on user interaction — i.e. only implement the panning aspect, and not the zooming aspect, of D3’s built-in zoom behaviour. We do this because it’s the only way to disable scrollwheel zooming. (Zooming is handled by our zoom-in and zoom-out buttons.)
+  // TODO: the above nearly seems to do it. But I think we probably need to do something with scaleExtent as well? Maybe? http://stackoverflow.com/questions/19437226/d3-maps-how-to-disable-zoom-on-scrollwheel-but-retain-panning-by-dragging
   var h = height/4;
 
   t[0] = Math.min(
@@ -506,6 +509,7 @@ function zoomInOrOut(inOrOut) {
     y = (y - center[1]) * factor + center[1];
 
     zoom.scale(target_scale).translate([x, y]);
+    savedZoomScale = target_scale;
 
     g.transition()
             .attr("transform", "translate(" + zoom.translate().join(",") + ") scale(" + zoom.scale() + ")");
