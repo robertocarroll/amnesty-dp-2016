@@ -513,9 +513,9 @@ function zoomInOrOut(inOrOut) {
             .attr("d", path.projection(projection));
 }
 
-d3.select('#zoom-in').on('click', zoomInOrOut('in'));
+d3.select('#zoom-in').on('click', function () {zoomInOrOut('in');});
 
-d3.select('#zoom-out').on('click', zoomInOrOut('out'));
+d3.select('#zoom-out').on('click', function () {zoomInOrOut('out');});
 
 function setupBarChart(activeCountries) {
   var yearData = _.filter(activeCountries, function(val) {
